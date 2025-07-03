@@ -10,6 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LrcToJsonConverter {
+    static final int OFFSET_MS = 0;
+
     static class LineEntry {
         int time;
         String text;
@@ -69,7 +71,10 @@ public class LrcToJsonConverter {
                 if (millis < 100) millis *= 10;
                 int time = minutes * 60 * 1000 + seconds * 1000 + millis;
 
-                // 清除所有中括号里的时间标签（如中间有嵌套的 [00:00.000]）
+                // ✅ 应用偏移值
+                time += OFFSET_MS;
+                if (time < 0) time = 0;
+
                 String text = line.replaceAll("\\[\\d{2}:\\d{2}\\.\\d{2,3}\\]", "").trim();
                 grouped.computeIfAbsent(time, k -> new ArrayList<>()).add(text);
             }
@@ -82,7 +87,7 @@ public class LrcToJsonConverter {
             String jp = texts.size() > 0 ? texts.get(0) : "";
             String cn = texts.size() > 1 ? texts.get(1) : "";
             if (!interludeAdded) {
-                entries.add(new LineEntry(0)); // 只插入一次 interlude
+                entries.add(new LineEntry(0));
                 interludeAdded = true;
             }
             entries.add(new LineEntry(time, jp, cn));
