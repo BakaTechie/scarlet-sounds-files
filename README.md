@@ -7,3 +7,6 @@ https://github.com/aandrew-me/ytDownloader
 
 ### 歌词下载 处理 LrcToJsonConverter.java
 https://github.com/jitwxs/163MusicLyrics
+
+### 专辑图片处理 Converter
+https://github.com/AlexAzumi/webp-converter
